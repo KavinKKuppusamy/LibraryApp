@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!--
+<script>
+function myFunc() {
+   var patt = new RegExp("\d{3}[\-]\d{2}[\-]\d{4}");
+   var x = document.getElementById("ssn");
+   var res = patt.test(x.value);
+   if(!res){
+    x.value = x.value
+        .match(/\d*/g).join('')
+        .match(/(\d{0,3})(\d{0,2})(\d{0,4})/).slice(1).join('-')
+        .replace(/-*$/g, '');
+   }
+}
+</script>
+-->
+	<title>Add Borrowers</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+ 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body style="background-color:#7FFFD4;">
+		{% load staticfiles %}
+	<nav class="navbar navbar-inverse">
+	  <div class="container-fluid">
+	    <div class="navbar-header">
+	      <a class="navbar-brand" href="../">Home</a>
+	    </div>
+	    <ul class="nav navbar-nav">
+        <li><a href="../searchyourbook">Search Your Book</a></li>
+	      <li><a href="../bookcheckin">Check-In</a></li>
+	      <li><a href="../payfine">Pay Fine</a></li>
+	      <li><a href="../createborrower">New Borrower</a></li>
+	    </ul>
+	  </div>
+	</nav>
+	<section align="center">
+		<h3><p style="font-weight: bold;">Hey! Do you want to create a new Borrower? Fill out correct Info below! </p></h3>
+		<table align="center" cellspacing="10">
+			<form align="center" action="{% url 'createborrower:index' %}" method="POST" class="form-inline">
+				<div class="form-group">
+					{% csrf_token %}
+					<tr><td height=30 colspan=1></td></tr>
+					<tr>
+						<td><label for="title">Full Name </label></td>
+						<td><input type="text" name="fname" class="form-control" required="1" /></td>
+					</tr>
+					<tr><td height=30 colspan=1></td></tr>
+					<tr>
+						<td><label for="ssn">SSN </label></td>
+						<td><input type="text" name="ssn" id='ssn' placeholder="###-##-####"class="form-control" maxlength="11" onBlur = "myFunc()" required="1" /></td>
+					</tr>
+					<tr><td height=30 colspan=1></td></tr>
+					<tr>
+						<td><label for="Address">Address </label></td>
+						<td><input type="text" name="address" class="form-control" required="1" /></td>
+					</tr>
+					<tr><td height=30 colspan=1></td></tr>
+					<tr>
+						<td><label for="Phone">Phone </label></td>
+						<td><input type="text" name="phone" class="form-control" required="1" /></td>
+					</tr>
+					<tr><td height=30 colspan=1></td></tr>
+					<tr>
+						<td colspan="2" align="center"><input type="submit" class="btn btn-success" value="Submit it!" name="addborrower"></td>
+					</tr>
+					<tr><td height=30 colspan=1></td></tr>
+				</div>
+			</form>
+		</table>
+
+		{% if check_ssn %}
+			<p style="font-size:{{ "20" }}px;"> {{ "Uh oh! Seems like SSN is already exists or in wrong format, please try again!" }}</p>
+
+		{% else %}
+			{% if msg %}
+				<p style="font-size:{{ "20" }}px;">{{msg}}</p>
+			{% endif %}
+		{% endif %}
+	</section>
+</body>
+</html>

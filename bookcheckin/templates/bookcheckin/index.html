@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Checkin Books</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+ 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body style="background-color:#7FFFD4;">
+	<nav class="navbar navbar-inverse">
+	  <div class="container-fluid">
+	    <div class="navbar-header">
+	      <a class="navbar-brand" href="../">Home</a>
+	    </div>
+	    <ul class="nav navbar-nav">
+				<li><a href="../searchyourbook">Search Your Book</a></li>
+	      <li><a href="../bookcheckin">Check-In</a></li>
+	      <li><a href="../payfine">Pay Fine</a></li>
+	      <li><a href="../createborrower">New Borrower</a></li>
+	    </ul>
+	  </div>
+	</nav>
+	<section align="center">
+		<h2>Hello! Please search below for the book to check-in!</h2>
+
+		<form action="{% url 'bookcheckin:index' %}" method="post" class="form-inline">
+			<div class="form-group">
+				{% csrf_token %}
+				<input type="text" name="checkin" class="form-control" />
+				<input type="submit" value="Search" class="btn btn-success" name="searchbtn">
+			</div>
+		</form>
+
+		{% if books %}
+			<div class="container">
+				<h3>Here's what we found for you!</h3>
+				<table class="table table-striped">
+				<tr>
+					<th>Isbn</th>
+					<th>Title</th>
+					<th>Author</th>
+					<th>Card Number</th>
+					<th>Borrower Name</th>
+					<th>Ssn</th>
+					<th>Check In</th>
+				</tr>
+				{% for book in books %}
+				<tr>
+					<td>{{ book.0 }}</td>
+					<td>{{ book.1 }}</td>
+					<td>{{ book.2 }}</td>
+					<td>{{ book.3 }}</td>
+					<td>{{ book.4 }}</td>
+					<td>{{ book.5 }}</td>
+					<td>
+						<form action="{% url 'bookcheckin:index' %}" method="POST" id="card_no_form">
+							{% csrf_token %}
+							<input type="hidden" name="isbnrtbk" value = {{book.0}} />
+							<input type="hidden" name="loanid" value = {{book.6}} />
+							<input type="submit" name="checkinbtn" class="btn" value="Check-In" />
+						</form>
+					</td>
+				</tr>
+				<tr><td height=30 colspan=1></td></tr>
+				{% endfor %}
+				</table>
+			</div>
+		{% else %}
+			{% if get == False %}
+				<h3>No Books Available</h3>
+			{% endif %}
+		{% endif %}
+
+		<div id="loanInfo">
+			{% if message %}
+				<p style="font-size:{{ "20" }}px;">{{ message }}</p>
+			{% endif %}
+		</div>
+	</section>
+</body>
+</html>

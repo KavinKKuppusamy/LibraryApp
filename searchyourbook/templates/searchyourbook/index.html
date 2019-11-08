@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Search your Book</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+ 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body style="background-color:#7FFFD4;">
+	<nav class="navbar navbar-inverse">
+	  <div class="container-fluid">
+	    <div class="navbar-header">
+	      <a class="navbar-brand" href="../">Home</a>
+	    </div>
+	    <ul class="nav navbar-nav">
+        <li><a href="../searchyourbook">Search Your Book</a></li>
+	      <li><a href="../bookcheckin">Check-In</a></li>
+	      <li><a href="../payfine">Pay Fine</a></li>
+	      <li><a href="../createborrower">New Borrower</a></li>
+	    </ul>
+	  </div>
+	</nav>
+	<section align="center">
+		<h3>
+			Hello! Search for any book that you want to check out!
+		</h3>
+
+		<form action="{% url 'searchyourbook:index' %}" class="form-inline" method="post">
+			<div class="form-group">
+				{% csrf_token %}
+				<input type="text" name="search" class="form-control" value="" />
+				<input type="submit" value="Search" class="btn btn-success" name="searchbtn">
+			</div>
+		</form>
+
+		{% if books %}
+			<div class="container">
+				<h3>Listing below the available books!</h3>
+				<table class="table table-striped">
+					<tr>
+						<th>Isbn</th>
+						<th>Title</th>
+						<th>Author</th>
+						<th>Available</th>
+					</tr>
+					{% for book in books %}
+					<tr>
+						<td>{{ book.0 }}</td>
+						<td>{{ book.1 }}</td>
+						<td>{{ book.2 }}</td>
+						<td>
+							{% if book.3 == 1 %}
+								Yes
+							{% else %}
+								No
+							{% endif %}
+						</td>
+
+					</tr>
+					{% endfor %}
+				</table>
+			</div>
+			{% else %}
+				{% if get == False %}
+					<h3>No Books Available</h3>
+				{% endif %}
+			{% endif %}
+
+			<table align="center" cellspacing="10">
+				<form align="center" action="{% url 'searchyourbook:index' %}" method="POST" class="form-inline">
+					<div class="form-group">
+						{% csrf_token %}
+						<tr><td height=30 colspan=1></td></tr>
+						<tr>
+							<td><label for="isbn">Enter the ISBN</label></td>
+							<td><input type="text" name="isbn" class="form-control" required="1" /></td>
+						</tr>
+						<tr><td height=30 colspan=1></td></tr>
+						<tr>
+							<td><label for="cardno">Your Card_id </label></td>
+							<td><input type="text" name="cardno" id='cardno' class="form-control" maxlength="11" required="1" /></td>
+						</tr>
+						<tr><td height=30 colspan=1></td></tr>
+						<tr>
+							<td colspan="2" align="center"><input type="submit" class="btn btn-success" value="Check out" name="checkout"></td>
+						</tr>
+						<tr><td height=30 colspan=1></td></tr>
+					</div>
+				</form>
+			</table>
+
+
+
+		<div id="loanInfo">
+			{% if msg %}
+				<p style="font-size:{{ "20" }}px;">{{ msg }}</p>
+			{% endif %}
+		</div>
+
+		<script type="text/javascript">
+			function Cardnofunc(isbn)
+			{
+				var card_no = prompt("Enter the Card-id");
+				document.getElementById(isbn).value = card_no +','+isbn;
+			}
+		</script>
+	</section>
+</body>
+</html>
